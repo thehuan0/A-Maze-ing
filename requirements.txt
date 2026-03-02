@@ -1,0 +1,11 @@
+# Mandatory for the Norm check
+flake8
+mypy
+
+# Mandatory for generating the mazegen package
+build
+setuptools
+wheel
+
+# Optional: Frameworks for unit tests
+pytest
