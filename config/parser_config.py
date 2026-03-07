@@ -30,14 +30,36 @@ def config_parse(config_path: str) -> Config:
     try:
         with open(config_path) as f:
             lines = f.readlines()
+
         useful_lines = []
+
         for line_number, line in enumerate(lines, start=1):
             cleaned = line.strip()
+
             if not cleaned:
                 continue
-            if cleaned.startstwith('#'):
+
+            if cleaned.startswith('#'):
                 continue
-            useful_lines.append(line_number, cleaned)
+
+            useful_lines.append((line_number, cleaned))
+
+        for (line_number, cleaned) in useful_lines:
+            if "=" not in cleaned:
+                raise ConfigError(f"Error: Line {line_number}: expected KEY=VALUE")
+
+            left, right = cleaned.split("=")
+            key = left.strip().upper()
+            value = right.strip()
+
+            if not key:
+                raise ConfigError(f"Error: Line {line_number}: empty key")
+            if not value:
+                raise ConfigError(f"Error: Line {line_number}: empty value")
+            if key in raw_data:
+                raise ConfigError(f"Error: Line {line_number}:"
+                f" duplicate key {key}")
+            raw_data[key] = value
 
     except FileNotFoundError:
         raise ConfigError(f"Error: file not found: {config_path}")
