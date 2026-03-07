@@ -2,18 +2,20 @@ from typing import TypedDict,Tuple, Set
 
 
 class ConfigError(Exception):
-      """Raised when the configuration file cannot be parsed or validated."""
-      pass
+    """Raised when the configuration file cannot be parsed or validated."""
+    pass
 
 
 class Config(TypedDict):
     width: int
     height: int
-    entry: Tuple[int, int]
-    exit: Tuple[int, int]
+    start: Tuple[int, int]
+    finish: Tuple[int, int]
     output_file: str
     perfect: bool
-    # algorithm:
+    algorithm: str 
+    # "dfs" | "prim" | "kruskal"
+    seed: int
 
 
 def config_parse(config_path: str) -> Config:
