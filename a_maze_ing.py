@@ -11,6 +11,6 @@ def main() -> None:
 
     try:
         config = config_parse(config_path)
-    except ConfigError:
-        print("This is a placeholder Error")
+    except ConfigError as e:
+        sys.stderr.write(f"{e}\n")
         sys.exit(1)

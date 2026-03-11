@@ -27,6 +27,11 @@ def config_parse(config_path: str) -> Config:
         "OUTPUT_FILE",
         "PERFECT"
     }
+    optional_keys: Set[str] = {
+        "ALGORITHM",
+        "SEED"
+    }
+    allowed_keys = mandatory_keys | optional_keys
     try:
         with open(config_path) as f:
             lines = f.readlines()
@@ -60,6 +65,8 @@ def config_parse(config_path: str) -> Config:
                 raise ConfigError(f"Error: Line {line_number}:"
                 f" duplicate key {key}")
             raw_data[key] = value
+        
+        missing_keys = mandatory_keys - 
 
     except FileNotFoundError:
         raise ConfigError(f"Error: file not found: {config_path}")
