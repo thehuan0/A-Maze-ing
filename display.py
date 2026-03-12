@@ -11,7 +11,6 @@ from typing import Any, Iterator, Optional
 import mlx
 
 from mazegen import (
-    ANIM_STEPS_PER_TICK,
     DIR_DELTA,
     EAST,
     MazeGenerator,
@@ -27,7 +26,7 @@ WALL_PX: int = 3
 
 PALETTES: list[tuple[int, int, int]] = [
     (220, 220, 230),   # 0 – white  (default)
-    (60, 190, 255),    # 1 – cyan
+    (0, 0, 204),       # 1 – cyan
     (80, 230, 100),    # 2 – green
     (255, 210, 50),    # 3 – yellow
     (200, 70, 255),    # 4 – purple
@@ -738,11 +737,9 @@ class MazeDisplay:
             phase_offset=0.5, heart_color=self.is_heart_mode,
         )
 
-        score = 2000 - (self.move_count * self._elapsed_secs)
         stats = (
             f"{self.move_count} STEPS"
             f"   {_fmt_time(self._elapsed_secs)}"
-            f"   SCORE {score}"
         )
         self._draw_str_centered(
             stats, y2 + glyph_h2 + BOUNCE_AMP_SUB + 20, GOLD, 2
