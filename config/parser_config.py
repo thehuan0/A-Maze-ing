@@ -18,11 +18,12 @@ ALLOWED_KEYS: Set[str] = MANDATORY_KEYS | OPTIONAL_KEYS
 
 
 class ConfigError(Exception):
-    """Raised when the configuration file cannot be parsed or validated."""
+    """Raise an error for an invalid config file."""
     pass
 
 
 class Config(TypedDict):
+    """Store the parsed maze configuration."""
     width: int
     height: int
     entry_xy: Tuple[int, int]
@@ -32,8 +33,11 @@ class Config(TypedDict):
     algorithm: Optional[Literal["dfs", "prim", "kruskal"]]
     seed: Optional[int]
 
+# Helper functions to convert raw config values to typed values.
+
 
 def parse_int(key_name: str, raw_value: str) -> int:
+    """Convert a config value to an integer."""
     try:
         int_value = int(raw_value)
     except ValueError:
@@ -44,6 +48,7 @@ def parse_int(key_name: str, raw_value: str) -> int:
 
 
 def parse_bool(key_name: str, raw_value: str) -> bool:
+    """Convert a config value to a boolean."""
     value = raw_value.strip().lower()
 
     if value == "true":
@@ -58,6 +63,7 @@ def parse_bool(key_name: str, raw_value: str) -> bool:
 
 
 def parse_coordinates(key_name: str, raw_coord: str) -> Tuple[int, int]:
+    """Convert a config value to x,y coordinates."""
     parts = raw_coord.split(",")
     if len(parts) != 2:
         raise ConfigError(f"Error: {key_name} must be in format x,y")
@@ -70,9 +76,11 @@ def parse_coordinates(key_name: str, raw_coord: str) -> Tuple[int, int]:
 
 
 def config_parse(config_path: str) -> Config:
+    """Parse and validate a maze config file."""
     raw_data: dict[str, str] = {}
-
     try:
+
+        # Read config file and collect meaningful lines (skip comments/empty).
         with open(config_path) as f:
             lines = f.readlines()
 
@@ -89,6 +97,7 @@ def config_parse(config_path: str) -> Config:
 
             useful_lines.append((line_number, cleaned))
 
+        # Parse KEY=VALUE pairs and build the raw config dictionary.
         for line_number, cleaned in useful_lines:
             if "=" not in cleaned:
                 raise ConfigError(f"Error: Line {line_number}:"
@@ -110,6 +119,7 @@ def config_parse(config_path: str) -> Config:
 
             raw_data[key] = value
 
+        # Validate allowed keys and required keys.
         unknown_keys = raw_data.keys() - ALLOWED_KEYS
         if unknown_keys:
             unknown_keys_str = ", ".join(sorted(unknown_keys))
@@ -129,6 +139,7 @@ def config_parse(config_path: str) -> Config:
                 raise ConfigError(f"Error: missing required keys:"
                                   f" {missing_keys_str}")
 
+        # Convert raw string values to typed configuration values.
         width = parse_int("WIDTH", raw_data["WIDTH"])
         height = parse_int("HEIGHT", raw_data["HEIGHT"])
 
@@ -152,8 +163,9 @@ def config_parse(config_path: str) -> Config:
         else:
             algo = None
 
+        # Validate maze dimensions and entry/exit positions.
         if width <= 0 or height <= 0:
-            raise ConfigError("WIDTH and HEIGHT must be a positive integer")
+            raise ConfigError("WIDTH and HEIGHT must be positive integers")
 
         entry_x, entry_y = entry_xy
         exit_x, exit_y = exit_xy

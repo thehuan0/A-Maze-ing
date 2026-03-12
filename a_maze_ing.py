@@ -14,3 +14,9 @@ def main() -> None:
     except ConfigError as e:
         sys.stderr.write(f"{e}\n")
         sys.exit(1)
+
+    print(config)
+
+
+if __name__ == "__main__":
+    main()

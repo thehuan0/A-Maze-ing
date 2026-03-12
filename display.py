@@ -299,14 +299,14 @@ class MazeDisplay:
         Args:
             cfg: Parsed maze configuration dictionary.
         """
-        self.W: int = cfg['WIDTH']
-        self.H: int = cfg['HEIGHT']
-        self.entry: tuple[int, int] = cfg['ENTRY']
-        self.exit_: tuple[int, int] = cfg['EXIT']
-        self.perfect: bool = cfg['PERFECT']
-        self.algorithm: str = cfg.get('ALGORITHM', 'dfs')
-        self.out_file: str = cfg['OUTPUT_FILE']
-        self.seed: Optional[int] = cfg.get('SEED')
+        self.W: int = cfg['width']
+        self.H: int = cfg['height']
+        self.entry: tuple[int, int] = cfg['entry_xy']
+        self.exit_: tuple[int, int] = cfg['exit_xy']
+        self.perfect: bool = cfg['perfect']
+        self.algorithm: str = cfg['algorithm'] or 'dfs'
+        self.out_file: str = cfg['output_file']
+        self.seed: Optional[int] = cfg.get('seed')
 
         self.ww: int = self.W * CELL_PX + WALL_PX
         self.wh: int = self.H * CELL_PX + WALL_PX
@@ -449,7 +449,7 @@ class MazeDisplay:
         """Append the current run to leaderboard.json.
 
         Args:
-            name: Player name (already validated, uppercase, max 12 chars).
+            name: Player name (already validated, uppercase, max 10 chars).
         """
         entry_id = int(time.time() * 1000)
         entry: dict[str, Any] = {
