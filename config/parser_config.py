@@ -106,12 +106,23 @@ def config_parse(config_path: str) -> Config:
             left, right = cleaned.split("=", 1)
             key = left.strip().upper()
             value = right.strip()
+    
+            if not key:
+                raise ConfigError(f"Error: Line {line_number}: empty key")
+            if key == "SEED" and not value:
+                continue
+            elif key == "ALGORITHM" and not value:
+                continue
+            else:
+                if not value:
+                    raise ConfigError(f"Error: Line {line_number}: empty value")
 
             if not key:
                 raise ConfigError(f"Error: Line {line_number}: empty key")
 
-            if not value:
-                raise ConfigError(f"Error: Line {line_number}: empty value")
+            # if 
+            # if not value:
+            #     raise ConfigError(f"Error: Line {line_number}: empty value")
 
             if key in raw_data:
                 raise ConfigError(f"Error: Line {line_number}:"

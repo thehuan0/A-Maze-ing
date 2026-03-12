@@ -457,7 +457,7 @@ class MazeDisplay:
             'name': name,
             'moves': self.move_count,
             'secs': self._elapsed_secs,
-            'score': 2000 - (self.move_count * self._elapsed_secs),
+            'score': 10000 - (self.move_count * self._elapsed_secs),
         }
         self._lb_entries.append(entry)
         _save_lb(self._lb_entries)
