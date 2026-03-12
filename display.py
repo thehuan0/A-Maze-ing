@@ -746,7 +746,8 @@ class MazeDisplay:
         glyph_h2 = CHAR_ROWS * sc2
         block_h = (
             glyph_h1 + BOUNCE_AMP_WIN
-        ) + top_gap + (glyph_h2 + BOUNCE_AMP_SUB) + mid_gap + (CHAR_ROWS * stats_scale)
+        ) + top_gap + (glyph_h2 + BOUNCE_AMP_SUB) + mid_gap
+        + (CHAR_ROWS * stats_scale)
         y1 = max(8, (self.wh - block_h) // 2 + BOUNCE_AMP_WIN)
         y2 = y1 + glyph_h1 + BOUNCE_AMP_WIN + top_gap
 
@@ -855,7 +856,6 @@ class MazeDisplay:
             self.wh - CHAR_ROWS * 2 - 12, DIM, 2,
         )
 
-
     def _draw(self) -> None:
         """Redraw the full window.
 
@@ -881,7 +881,7 @@ class MazeDisplay:
                 self._draw_cell(cx, cy)
         if self.is_heart_mode:
             self._draw_heart_boundary()
-        
+
         if self.overlay == OVL_VICTORY:
             self._draw_victory_overlay(t)
             mlx.put_image_to_window(self.mlx, self.win, self.img, 0, 0)

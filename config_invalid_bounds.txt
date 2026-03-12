@@ -1,8 +1,0 @@
-# invalid config entry/exits not in maze scope
-
-WIDTH=10
-HEIGHT=10
-ENTRY=10,2
-EXIT=8,8
-OUTPUT_FILE=maze.txt
-PERFECT=True

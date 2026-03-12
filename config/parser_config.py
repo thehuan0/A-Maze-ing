@@ -76,6 +76,25 @@ def parse_coordinates(key_name: str, raw_coord: str) -> Tuple[int, int]:
     return (x, y)
 
 
+def parse_algorithm(
+    key_name: str,
+    raw_value: str,
+) -> Literal["dfs", "prim", "kruskal"]:
+    """Convert a config value to a supported algorithm."""
+    value = raw_value.strip().lower()
+
+    if value == "dfs":
+        return "dfs"
+    if value == "prim":
+        return "prim"
+    if value == "kruskal":
+        return "kruskal"
+
+    raise ConfigError(
+        f"Error: {key_name} must be one of: dfs, prim, kruskal"
+    )
+
+
 def config_parse(config_path: str) -> Config:
     """Parse and validate a maze config file."""
     raw_data: dict[str, str] = {}
@@ -116,14 +135,11 @@ def config_parse(config_path: str) -> Config:
                 continue
             else:
                 if not value:
-                    raise ConfigError(f"Error: Line {line_number}: empty value")
+                    raise ConfigError(f"Error: Line {line_number}:"
+                                      " empty value")
 
             if not key:
                 raise ConfigError(f"Error: Line {line_number}: empty key")
-
-            # if 
-            # if not value:
-            #     raise ConfigError(f"Error: Line {line_number}: empty value")
 
             if key in raw_data:
                 raise ConfigError(f"Error: Line {line_number}:"
@@ -172,13 +188,9 @@ def config_parse(config_path: str) -> Config:
             seed = parse_int("SEED", raw_data["SEED"])
         else:
             seed = None
+        algo: Optional[Literal["dfs", "prim", "kruskal"]] = None
         if "ALGORITHM" in raw_data:
-            algo = raw_data["ALGORITHM"].lower()
-            if algo not in {"dfs", "prim", "kruskal"}:
-                raise ConfigError(
-                    "Error: ALGORITHM must be one of:"
-                    " dfs, prim, kruskal"
-                )
+            algo = parse_algorithm("ALGORITHM", raw_data["ALGORITHM"])
         else:
             algo = None
 
