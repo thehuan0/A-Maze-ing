@@ -1,0 +1,10 @@
+# invalid config entry/exit in 42
+
+WIDTH=30
+HEIGHT=30
+ENTRY=16,15
+EXIT=9,2
+OUTPUT_FILE=maze.txt
+PERFECT=True
+SEED=18
+ALGORITHM=prim

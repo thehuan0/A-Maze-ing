@@ -1,4 +1,5 @@
 from typing import TypedDict, Tuple, Set, Literal, Optional
+from mazegen import MazeGenerator
 
 MANDATORY_KEYS: Set[str] = {
         "WIDTH",
@@ -106,7 +107,7 @@ def config_parse(config_path: str) -> Config:
             left, right = cleaned.split("=", 1)
             key = left.strip().upper()
             value = right.strip()
-    
+
             if not key:
                 raise ConfigError(f"Error: Line {line_number}: empty key")
             if key == "SEED" and not value:
@@ -156,6 +157,13 @@ def config_parse(config_path: str) -> Config:
 
         entry_xy = parse_coordinates("ENTRY", raw_data["ENTRY"])
         exit_xy = parse_coordinates("EXIT", raw_data["EXIT"])
+
+        pattern = MazeGenerator.pattern_cells(width, height)
+
+        if entry_xy in pattern:
+            raise ConfigError("ENTRY cannot be inside the 42 pattern")
+        if exit_xy in pattern:
+            raise ConfigError("EXIT cannot be inside the 42 pattern")
 
         perfect = parse_bool("PERFECT", raw_data["PERFECT"])
         output_file = raw_data["OUTPUT_FILE"]
