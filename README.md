@@ -1,6 +1,6 @@
 _This project has been created as part of the 42 curriculum by @jperez-s & @josjimen_
 
-#Description
+# Description
 
     A-MAZE-ING in a Python program that creates mazes using maze generation algorithms and displays them via a graphical interface. 
 
@@ -9,7 +9,7 @@ _This project has been created as part of the 42 curriculum by @jperez-s & @josj
 
     This application also provides an interactive visualization where the user can explore the generated maze. 
 
-#Project Goal
+# Project Goal
 
     The goal of this project is to:
     - Implement maze generation algorithms
@@ -18,7 +18,7 @@ _This project has been created as part of the 42 curriculum by @jperez-s & @josj
     - Display the maze usinng a graphical interface
     - Integrate a fixed 42-shaped structure inside the maze
 
-#Installation
+# Installation
 
     Clone the repository and install dependencies:
         git clone <repository_url>
@@ -26,13 +26,13 @@ _This project has been created as part of the 42 curriculum by @jperez-s & @josj
         make install
     The install rule will create a Pyhton virtual environment, upgrade pip and install required dependencies.
 
-#Running the program
+# Running the program
 
     The file requires a configuration file, which is provided.
     Example usage: python3 a_maze_ing.py config.txt
     or using the Makefile: make run
 
-#Configuration File
+# Configuration File
 
     The maze behaviour is controlled with a configuration file. Example:
 
@@ -42,10 +42,10 @@ _This project has been created as part of the 42 curriculum by @jperez-s & @josj
     EXIT=29,29
     OUTPUT_FILE=maze.txt
     PERFECT=True
-    SEED=18
-    ALGORITHM=prim
+    SEED=18 # OPTIONAL PARAMETER
+    ALGORITHM=prim # OPTIONAL PARAMETER
 
-#Configuration Parameters
+# Configuration Parameters
 
     Parameter ----- Description
     WIDTH --------- Width of the maze
@@ -57,7 +57,7 @@ _This project has been created as part of the 42 curriculum by @jperez-s & @josj
     SEED ---------- Seed used for deterministic generation
     ALGORITHM ------ Maze generation algorithm
 
-#Supported Algorithms
+# Supported Algorithms
 
     The project supports the following maze generation algorithms:
 
@@ -69,20 +69,26 @@ _This project has been created as part of the 42 curriculum by @jperez-s & @josj
 
     Each algorithm produces a different maze structure while respecting the constraints of the project.
 
-#Controls
+# Controls
 
     During visualization the following controls are available:
 
     Key -------------------- Action
     Arrow Keys / WASD ------ Move inside the maze
     R ---------------------- Generate a new maze
-    Q ---------------------- Quit the program
+    Q/ESC ------------------ Quit the program
     L ---------------------- Open leaderboard (only in Heart mode)
     C ---------------------- Changes the colour palette
 
-#Makefile
+# Makefile
 
-#Project Structure
+# Re-usable Module
+
+# Resources
+
+# Learnings: what worked and what didn't
+
+# Project Structure
 
     .
     ├── a_maze_ing.py
@@ -94,9 +100,10 @@ _This project has been created as part of the 42 curriculum by @jperez-s & @josj
     ├── mlx
     ├── requirements.txt
     ├── Makefile
+    ├── pyproject.toml
     └── README.md
 
-#Team Responsabilities
+# Team Responsabilities
 
     @jperez-s main contributions:
     - Maze generation algorithms implementation
@@ -120,15 +127,7 @@ _This project has been created as part of the 42 curriculum by @jperez-s & @josj
     - Reviewing implementation decisions
     - Final validation of project requirements
 
-#Notes
-
-    - The maze always includes a 42-shaped wall pattern located in the center.
-
-    - The configuration parser prevents invalid starting positions inside this pattern.
-
-    - The graphical interface is implemented using MiniLibX.
-
-#Bonus Features
+# Bonus Features
 
     - Multiple maze generation algorithms
     - Animated victory screen
@@ -136,3 +135,13 @@ _This project has been created as part of the 42 curriculum by @jperez-s & @josj
     - Time counter
     - Heart-shapped custom map
     - Scores and leaderboard
+
+
+# Notes
+
+    - The maze always includes a 42-shaped wall pattern located in the center.
+
+    - The configuration parser prevents invalid starting positions inside this pattern.
+
+    - The graphical interface is implemented using MiniLibX.
+
