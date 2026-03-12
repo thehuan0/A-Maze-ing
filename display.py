@@ -396,7 +396,7 @@ class MazeDisplay:
         """
         if self._anim_iter is None or self._gen is None:
             return
-        for _ in range(ANIM_STEPS_PER_TICK):
+        for _ in range(3):
             try:
                 self.grid = next(self._anim_iter)
                 self.dirty = True

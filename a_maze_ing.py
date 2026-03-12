@@ -1,5 +1,6 @@
 import sys
 from config import config_parse, ConfigError
+from display import run_display
 
 
 def main() -> None:
@@ -15,7 +16,7 @@ def main() -> None:
         sys.stderr.write(f"{e}\n")
         sys.exit(1)
 
-    print(config)
+    run_display(config)
 
 
 if __name__ == "__main__":
