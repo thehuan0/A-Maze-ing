@@ -16,6 +16,7 @@ OPTIONAL_KEYS: Set[str] = {
 
 ALLOWED_KEYS: Set[str] = MANDATORY_KEYS | OPTIONAL_KEYS
 
+
 class ConfigError(Exception):
     """Raised when the configuration file cannot be parsed or validated."""
     pass
@@ -30,6 +31,42 @@ class Config(TypedDict):
     perfect: bool
     algorithm: Optional[Literal["dfs", "prim", "kruskal"]]
     seed: Optional[int]
+
+
+def parse_int(key_name: str, raw_value: str) -> int:
+    try:
+        int_value = int(raw_value)
+    except ValueError:
+        raise ConfigError(
+            f"Error: {key_name} must be an integer, got '{raw_value}'"
+        )
+    return int_value
+
+
+def parse_bool(key_name: str, raw_value: str) -> bool:
+    value = raw_value.strip().lower()
+
+    if value == "true":
+        return True
+
+    if value == "false":
+        return False
+
+    raise ConfigError(
+        f"Error: {key_name} must be True or False, got '{raw_value}'"
+    )
+
+
+def parse_coordinates(key_name: str, raw_coord: str) -> Tuple[int, int]:
+    parts = raw_coord.split(",")
+    if len(parts) != 2:
+        raise ConfigError(f"Error: {key_name} must be in format x,y")
+    x_raw, y_raw = parts
+
+    x = parse_int(key_name, x_raw.strip())
+    y = parse_int(key_name, y_raw.strip())
+
+    return (x, y)
 
 
 def config_parse(config_path: str) -> Config:
@@ -77,9 +114,9 @@ def config_parse(config_path: str) -> Config:
         if unknown_keys:
             unknown_keys_str = ", ".join(sorted(unknown_keys))
             if len(unknown_keys) == 1:
-                raise ConfigError(f"Error: unkown key: {unknown_keys_str}")
+                raise ConfigError(f"Error: unknown key: {unknown_keys_str}")
             else:
-                raise ConfigError(f"Error: unkown keys:"
+                raise ConfigError(f"Error: unknown keys:"
                                   f" {unknown_keys_str}")
 
         missing_keys = MANDATORY_KEYS - raw_data.keys()
@@ -92,9 +129,62 @@ def config_parse(config_path: str) -> Config:
                 raise ConfigError(f"Error: missing required keys:"
                                   f" {missing_keys_str}")
 
+        width = parse_int("WIDTH", raw_data["WIDTH"])
+        height = parse_int("HEIGHT", raw_data["HEIGHT"])
+
+        entry_xy = parse_coordinates("ENTRY", raw_data["ENTRY"])
+        exit_xy = parse_coordinates("EXIT", raw_data["EXIT"])
+
+        perfect = parse_bool("PERFECT", raw_data["PERFECT"])
+        output_file = raw_data["OUTPUT_FILE"]
+
+        if "SEED" in raw_data:
+            seed = parse_int("SEED", raw_data["SEED"])
+        else:
+            seed = None
+        if "ALGORITHM" in raw_data:
+            algo = raw_data["ALGORITHM"].lower()
+            if algo not in {"dfs", "prim", "kruskal"}:
+                raise ConfigError(
+                    "Error: ALGORITHM must be one of:"
+                    " dfs, prim, kruskal"
+                )
+        else:
+            algo = None
+
+        if width <= 0 or height <= 0:
+            raise ConfigError("WIDTH and HEIGHT must be a positive integer")
+
+        entry_x, entry_y = entry_xy
+        exit_x, exit_y = exit_xy
+
+        if entry_x < 0 or entry_y < 0 or entry_x >= width or entry_y >= height:
+            raise ConfigError(
+                "Error: ENTRY coordinates must be positive"
+                " integers and within the maze size"
+                )
+        if exit_x < 0 or exit_y < 0 or exit_x >= width or exit_y >= height:
+            raise ConfigError(
+                "Error: EXIT coordinates must be positive"
+                " integers and within the maze size"
+                )
+        if entry_xy == exit_xy:
+            raise ConfigError("Error: ENTRY and EXIT cannot be the same")
+
     except FileNotFoundError:
         raise ConfigError(f"Error: file not found: {config_path}")
     except PermissionError:
         raise ConfigError(f"Error: {config_path} cannot be read")
     except IsADirectoryError:
         raise ConfigError(f"Error: {config_path} cannot be a directory")
+
+    return {
+        "width": width,
+        "height": height,
+        "entry_xy": entry_xy,
+        "exit_xy": exit_xy,
+        "output_file": output_file,
+        "perfect": perfect,
+        "algorithm": algo,
+        "seed": seed,
+    }
