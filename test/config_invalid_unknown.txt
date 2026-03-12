@@ -1,0 +1,9 @@
+# invalid config unknown key COLOR
+
+WIDTH=10
+HEIGHT=10
+ENTRY=1,1
+EXIT=8,8
+OUTPUT_FILE=maze.txt
+PERFECT=True
+COLOR=blue

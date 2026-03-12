@@ -308,8 +308,11 @@ class MazeDisplay:
         self.out_file: str = cfg['output_file']
         self.seed: Optional[int] = cfg.get('seed')
 
-        self.ww: int = self.W * CELL_PX + WALL_PX
-        self.wh: int = self.H * CELL_PX + WALL_PX
+        maze_w = self.W * CELL_PX + WALL_PX
+        maze_h = self.H * CELL_PX + WALL_PX
+
+        self.ww: int = max(maze_w, 520)
+        self.wh: int = max(maze_h, 320)
 
         self.mlx = mlx.init()
         self.win = mlx.new_window(
@@ -714,42 +717,71 @@ class MazeDisplay:
                         self._r(px + cs, py, wt, cs + wt, wc)
 
     # overlay renders
-
     def _draw_victory_overlay(self, t: float) -> None:
         """Render the animated victory screen into the image buffer."""
-        sc1, gap1 = 6, 3
-        sc2, gap2 = 3, 2
+        small_overlay = self.ww < 700 or self.wh < 420
+
+        if small_overlay:
+            sc1, gap1 = 4, 2
+            sc2, gap2 = 2, 1
+            title = "YOU WIN"
+            subtitle = "A-MAZE-ING!"
+            stats_scale = 1
+            hint_scale = 1
+            top_gap = 16
+            mid_gap = 14
+            bottom_gap = 12
+        else:
+            sc1, gap1 = 6, 3
+            sc2, gap2 = 3, 2
+            title = "YOU WIN"
+            subtitle = "YOU ARE A-MAZE-ING!"
+            stats_scale = 2
+            hint_scale = 2
+            top_gap = 24
+            mid_gap = 20
+            bottom_gap = 12
+
         glyph_h1 = CHAR_ROWS * sc1
         glyph_h2 = CHAR_ROWS * sc2
         block_h = (
             glyph_h1 + BOUNCE_AMP_WIN
-            ) + 24 + (glyph_h2 + BOUNCE_AMP_SUB)
-        y1 = (self.wh - block_h) // 2 + BOUNCE_AMP_WIN
-        y2 = y1 + glyph_h1 + BOUNCE_AMP_WIN + 24
+        ) + top_gap + (glyph_h2 + BOUNCE_AMP_SUB) + mid_gap + (CHAR_ROWS * stats_scale)
+        y1 = max(8, (self.wh - block_h) // 2 + BOUNCE_AMP_WIN)
+        y2 = y1 + glyph_h1 + BOUNCE_AMP_WIN + top_gap
 
         self._r(0, 0, self.ww, self.wh, BLACK)
+
         self._draw_line_animated(
-            "YOU WIN", y1, sc1, gap1, BOUNCE_AMP_WIN, t,
+            title, y1, sc1, gap1, BOUNCE_AMP_WIN, t,
             heart_color=self.is_heart_mode,
         )
         self._draw_line_animated(
-            "YOU ARE A-MAZE-ING!", y2, sc2, gap2, BOUNCE_AMP_SUB, t,
+            subtitle, y2, sc2, gap2, BOUNCE_AMP_SUB, t,
             phase_offset=0.5, heart_color=self.is_heart_mode,
         )
 
-        stats = (
-            f"{self.move_count} STEPS"
-            f"   {_fmt_time(self._elapsed_secs)}"
-        )
+        stats = f"{self.move_count} STEPS   {_fmt_time(self._elapsed_secs)}"
         self._draw_str_centered(
-            stats, y2 + glyph_h2 + BOUNCE_AMP_SUB + 20, GOLD, 2
+            stats,
+            y2 + glyph_h2 + BOUNCE_AMP_SUB + mid_gap,
+            GOLD,
+            stats_scale,
         )
 
         if self.is_heart_mode:
-            hint = "[L] LEADERBOARD   [R] NEW MAZE   [Q] QUIT"
+            hint = "[L] LB  [R] NEW  [Q] QUIT" if small_overlay \
+                else "[L] LEADERBOARD   [R] NEW MAZE   [Q] QUIT"
         else:
-            hint = "[R] NEW MAZE   [Q] QUIT"
-        self._draw_str_centered(hint, self.wh - CHAR_ROWS * 2 - 12, DIM, 2)
+            hint = "[R] NEW  [Q] QUIT" if small_overlay \
+                else "[R] NEW MAZE   [Q] QUIT"
+
+        self._draw_str_centered(
+            hint,
+            self.wh - CHAR_ROWS * hint_scale - bottom_gap,
+            DIM,
+            hint_scale,
+        )
 
     def _draw_leaderboard_overlay(self, t: float) -> None:
         """Render the leaderboard screen into the image buffer."""
@@ -823,7 +855,6 @@ class MazeDisplay:
             self.wh - CHAR_ROWS * 2 - 12, DIM, 2,
         )
 
-    # draw
 
     def _draw(self) -> None:
         """Redraw the full window.
@@ -850,7 +881,7 @@ class MazeDisplay:
                 self._draw_cell(cx, cy)
         if self.is_heart_mode:
             self._draw_heart_boundary()
-
+        
         if self.overlay == OVL_VICTORY:
             self._draw_victory_overlay(t)
             mlx.put_image_to_window(self.mlx, self.win, self.img, 0, 0)
