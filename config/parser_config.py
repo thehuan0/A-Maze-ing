@@ -161,9 +161,9 @@ def config_parse(config_path: str) -> Config:
         pattern = MazeGenerator.pattern_cells(width, height)
 
         if entry_xy in pattern:
-            raise ConfigError("ENTRY cannot be inside the 42 pattern")
+            raise ConfigError("Error: ENTRY cannot be inside the 42 pattern")
         if exit_xy in pattern:
-            raise ConfigError("EXIT cannot be inside the 42 pattern")
+            raise ConfigError("Error: EXIT cannot be inside the 42 pattern")
 
         perfect = parse_bool("PERFECT", raw_data["PERFECT"])
         output_file = raw_data["OUTPUT_FILE"]
