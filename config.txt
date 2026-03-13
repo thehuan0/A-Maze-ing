@@ -10,6 +10,7 @@ SEED=
 ALGORITHM=kruskal
 
 
+# heart-mode
 # WIDTH=30
 # HEIGHT=24
 # ENTRY=2, 5

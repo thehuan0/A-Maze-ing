@@ -22,7 +22,7 @@ _This project has been created as part of the 42 curriculum by @jperez-s & @josj
 
     Clone the repository and install dependencies:
         git clone <repository_url>
-        cd A_MAZE_ING
+        cd A-Maze-ing
         make install
     The install rule will create a Pyhton virtual environment, upgrade pip and install required dependencies.
 
@@ -34,7 +34,8 @@ _This project has been created as part of the 42 curriculum by @jperez-s & @josj
 
 # Configuration File
 
-    The maze behaviour is controlled with a configuration file. Example:
+    The maze behaviour is controlled with a configuration file.
+    Example:
 
     WIDTH=30
     HEIGHT=30
@@ -42,20 +43,8 @@ _This project has been created as part of the 42 curriculum by @jperez-s & @josj
     EXIT=29,29
     OUTPUT_FILE=maze.txt
     PERFECT=True
-    SEED=18 # OPTIONAL PARAMETER
-    ALGORITHM=prim # OPTIONAL PARAMETER
-
-# Controls
-
-    During visualization the following controls are available:
-
-    Key -------------------- Action
-    Arrow Keys / WASD ------ Move inside the maze
-    R ---------------------- Generate a new maze
-    Q/ESC ------------------ Quit the program
-    L ---------------------- Open leaderboard (only in Heart mode)
-    P ---------------------- Show the shortest solution/path
-    C ---------------------- Changes the colour palette
+    SEED=18               # OPTIONAL PARAMETER
+    ALGORITHM=prim        # OPTIONAL PARAMETER
 
 # Configuration Parameters
 
@@ -69,6 +58,18 @@ _This project has been created as part of the 42 curriculum by @jperez-s & @josj
     SEED ---------- Seed used for deterministic generation
     ALGORITHM ----- Maze generation algorithm
 
+# Controls
+
+    During visualization the following controls are available:
+
+    Key -------------------- Action
+    Arrow Keys / WASD ------ Move inside the maze
+    R ---------------------- Generate a new maze
+    Q/ESC ------------------ Quit the program
+    L ---------------------- Open leaderboard (only in Heart mode)
+    P ---------------------- Show the shortest solution/path
+    C ---------------------- Changes the colour palette
+
 # Re-usable Module
 
     The maze generation logic is implemented in a standalone module called mazegen.
@@ -78,16 +79,18 @@ _This project has been created as part of the 42 curriculum by @jperez-s & @josj
 
     from mazegen import MazeGenerator
 
-    gen = MazeGenerator(width=20, height=10, seed=42)
+    gen = MazeGenerator(config: Config)
     maze = gen.generate()
 
 ## Custom parameters
 
-    The generator can receive parameters such as maze size or a random seed to ensure reproducibility.
+    The generator can receive parameters such as:
+    Random seed to ensure reproducibility.
+    Algorithm to display different looking mazes.
 
 ## Accessing the result
 
-    The module exposes the generated maze structure and allows access to a valid solution path from entry to exit.
+    The output of the generation is stored in a maze.txt with the maze expressed in hexadecimal, coordinates of entry point and exit, and shortest solution in (N,S,W,E)
 
 # Supported Algorithms
 
@@ -241,6 +244,7 @@ _This project has been created as part of the 42 curriculum by @jperez-s & @josj
     ├── requirements.txt
     ├── Makefile
     ├── pyproject.toml
+    ├── mazegen-1.0.0.tar.gz
     └── README.md
 
 # Team Responsabilities
